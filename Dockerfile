@@ -6,12 +6,6 @@ RUN apt-get install -y -qq libgmp-dev pandoc git wget m4 unzip pkg-config curl \
 RUN wget https://github.com/ocaml/opam/releases/download/2.0.0-rc4/opam-2.0.0-rc4-x86_64-linux
 RUN mv opam-2.0.0-rc4-x86_64-linux /usr/local/bin/opam
 RUN chmod a+x /usr/local/bin/opam
-
-#RUN useradd -ms /bin/bash sliq
-#USER sliq
-#ENV USER=sliq
-#WORKDIR /home/sliq
-
 RUN opam init --comp=4.06.1 --disable-sandboxing
 
 # Liquidity
