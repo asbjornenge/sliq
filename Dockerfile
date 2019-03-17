@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:latest as builder
 RUN apt-get update -qq
 RUN apt-get install -y -qq libgmp-dev pandoc git wget m4 unzip pkg-config curl \
   libsecp256k1-dev libsecp256k1-0 libsodium-dev libssl-dev \
@@ -32,3 +32,12 @@ WORKDIR /root
 RUN git clone https://github.com/OCamlPro/techelson.git
 WORKDIR techelson
 RUN eval $(opam env --switch techelson) && make
+
+FROM ubuntu:latest as final
+
+RUN apt update 
+RUN apt install -y -qq libsodium-dev libcurl4-gnutls-dev
+
+COPY --from=builder /liquidity/liquidity /usr/local/bin/
+COPY --from=builder /liquidity/liquidity-mini /usr/local/bin/
+COPY --from=builder /root/techelson/bin/techelson /usr/local/bin/
