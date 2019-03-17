@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/asbjornenge/sliq/issues"
   },
-  "homepage": "https://github.com/asbjornenge/sliq#readme"
+  "homepage": "https://github.com/asbjornenge/sliq#readme",
+  "dependencies": {
+    "child-process-async": "^1.0.1",
+    "minimist": "^1.2.0"
+  }
 }

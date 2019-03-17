@@ -1,3 +1,4 @@
 *.swp
 *.tz
 *.techel
+node_modules
