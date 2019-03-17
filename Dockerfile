@@ -35,3 +35,4 @@ RUN apt install -y -qq libsodium-dev libcurl4-gnutls-dev
 COPY --from=builder /liquidity/liquidity /usr/local/bin/
 COPY --from=builder /liquidity/liquidity-mini /usr/local/bin/
 COPY --from=builder /root/techelson/bin/techelson /usr/local/bin/
+ADD techel.liq /
