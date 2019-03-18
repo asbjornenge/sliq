@@ -14,9 +14,12 @@ const image = 'asbjornenge/sliq:1.0.0'
 
 ;
 
-async function run(ctxPath, contracts, testfile) {
-  let compile = `docker run --rm -v ${ctxPath}:/ctx ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts} -o /ctx/tests/sliq.techel ${testfile}`
-  let test = `docker run --rm -v ${ctxPath}:/ctx ${image} techelson /ctx/tests/sliq.techel`
+async function run(contracts, testfile) {
+  let contractPaths = args.contracts.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
+  let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
+//  console.log(contractPaths, testPaths, contracts, testfile)
+  let compile = `docker run --rm -v /tmp:/tmp ${contractPaths} ${testPaths} ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts.join(' ')} -o /tmp/sliq.techel ${testfile}`
+  let test = `docker run --rm -v /tmp:/tmp ${image} techelson /tmp/sliq.techel`
   let res_c = await exec(compile)
   let res_t = await exec(test)
   return { compile: res_c, test: res_t }
@@ -52,11 +55,11 @@ async function getTests() {
   ${chalk.cyan('Contracts')}
     ${contracts.map(c => c.replace(cwd, '.')).join('\n    ')}
   ${chalk.green('Tests')}
-    ${tests.map(c => c.replace(cwd, '.')).join('\n    ')}
-`)
-//  for (let test of tests) {
-//    console.log(chalk.blue(`===== ${chalk.green(test)} =====`))
-//    let res = await run(ctxPath, contracts, test)
-//    console.log(res.test.stdout)
-//  }
+    ${tests.map(c => c.replace(cwd, '.')).join('\n    ')}`)
+  console.log(chalk.magenta('Running tests...'))
+  for (let test of tests) {
+    console.log(chalk.blue(`===== ${chalk.green(test.replace(cwd, '.'))} =====`))
+    let res = await run(contracts, test)
+    console.log(res.test.stdout)
+  }
 })()
