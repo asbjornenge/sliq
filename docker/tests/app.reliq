@@ -1,3 +1,0 @@
-type storage = unit;
-let nothing: (list(operation), unit) = ([], ());
-let%entry test = (_param: unit, _storage: unit) => nothing;
