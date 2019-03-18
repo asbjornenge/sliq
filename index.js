@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 const { exec, spawn } = require('child-process-async')
+const chalk = require('chalk')
 const path = require('path')
 const walk = require('walk-promise')
 const args = require('minimist')(process.argv.slice(2), {
   default : {
-    contracts : './contracts',
-    tests     : './tests',
+    contracts : '',
+    tests     : '',
     watch     : false
   }
 })
-const ctx = args._.length > 0 ? args._[0] : '.'
 const image = 'asbjornenge/sliq:1.0.0'
 
 ;
@@ -22,31 +22,41 @@ async function run(ctxPath, contracts, testfile) {
   return { compile: res_c, test: res_t }
 }
 
-async function getContracts(ctxPath) {
-  let contracts = await walk([ctxPath+'/contracts'])
+async function getContracts() {
+  if (args.contracts == '') return []
+  if (typeof args.contracts === 'string')
+    args.contracts = [args.contracts]
+  let paths = args.contracts.map(cp => path.resolve(cp))
+  let contracts = await walk(paths)
     .then(c => c.map(_c => _c.root+'/'+_c.name))
-    .then(c => c.map(_c => _c.replace(ctxPath,'/ctx')))
     .then(c => c.filter(_c => _c.endsWith('liq')))
-    .then(p => p.reduce((fp,p) => fp+' '+p,''))
   return contracts
 }
 
-async function getTests(ctxPath) {
-  let tests = await walk([ctxPath+'/tests'])
+async function getTests() {
+  if (args.tests == '') return []
+  if (typeof args.tests === 'string')
+    args.tests = [args.tests]
+  let paths = args.tests.map(tp => path.resolve(tp))
+  let tests = await walk(paths)
     .then(c => c.map(_c => _c.root+'/'+_c.name))
-    .then(c => c.map(_c => _c.replace(ctxPath,'/ctx')))
     .then(c => c.filter(_c => _c.endsWith('liq')))
-  // TODO if args.only filter
   return tests
 }
 
 (async () => {
-  let ctxPath = path.resolve(ctx)
-  let contracts = await getContracts(ctxPath)
-  let tests = await getTests(ctxPath)
-  for (let test of tests) {
-    console.log(`===== ${test} =====`)
-    let res = await run(ctxPath, contracts, test)
-    console.log(res.test.stdout)
-  }
+  let cwd = process.cwd()
+  let contracts = await getContracts()
+  let tests = await getTests()
+  console.log(`${chalk.magenta('Sliq')}
+  ${chalk.cyan('Contracts')}
+    ${contracts.map(c => c.replace(cwd, '.')).join('\n    ')}
+  ${chalk.green('Tests')}
+    ${tests.map(c => c.replace(cwd, '.')).join('\n    ')}
+`)
+//  for (let test of tests) {
+//    console.log(chalk.blue(`===== ${chalk.green(test)} =====`))
+//    let res = await run(ctxPath, contracts, test)
+//    console.log(res.test.stdout)
+//  }
 })()
