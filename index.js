@@ -63,7 +63,7 @@ async function getTests() {
       let res = run(contracts, test)
       console.log(res.test.toString())
     } catch(e) {
-      console.log('ERROR:', e.stdout.toString())
+      console.log('ERROR:', e.stdout.toString(), e.stderr.toString())
     }
   }
 })()
