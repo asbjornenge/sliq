@@ -10,7 +10,7 @@ const args = require('minimist')(process.argv.slice(2), {
     watch     : false
   }
 })
-const image = 'asbjornenge/sliq:1.0.0'
+const image = 'asbjornenge/sliq:1.0.1'
 
 ;
 

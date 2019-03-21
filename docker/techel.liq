@@ -16,3 +16,9 @@ external end_set_source :
 external must_fail :
     [%stack: operation] -> [%stack: operation]
     = "{ NONE string ; MUST_FAIL string }"
+external print_stack :
+    unit -> unit
+    = "PRINT_STACK"
+external step :
+    unit -> unit
+    = "STEP"
