@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "sliq": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +21,6 @@
   "homepage": "https://github.com/asbjornenge/sliq#readme",
   "dependencies": {
     "chalk": "^2.4.2",
-    "child-process-async": "^1.0.1",
     "minimist": "^1.2.0",
     "walk-promise": "^0.2.0"
   }
