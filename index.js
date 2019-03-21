@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { exec, spawn } = require('child-process-async')
+const child_process = require('child_process')
 const chalk = require('chalk')
 const path = require('path')
 const walk = require('walk-promise')
@@ -14,14 +14,14 @@ const image = 'asbjornenge/sliq:1.0.0'
 
 ;
 
-async function run(contracts, testfile) {
+function run(contracts, testfile) {
   let contractPaths = args.contracts.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
   let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
 //  console.log(contractPaths, testPaths, contracts, testfile)
   let compile = `docker run --rm -v /tmp:/tmp ${contractPaths} ${testPaths} ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts.join(' ')} -o /tmp/sliq.techel ${testfile}`
   let test = `docker run --rm -v /tmp:/tmp ${image} techelson /tmp/sliq.techel`
-  let res_c = await exec(compile)
-  let res_t = await exec(test)
+  let res_c = child_process.execSync(compile, { stdio: 'pipe' })
+  let res_t = child_process.execSync(test, { stdio: 'pipe' })
   return { compile: res_c, test: res_t }
 }
 
@@ -59,7 +59,11 @@ async function getTests() {
   console.log(chalk.magenta('Running tests...'))
   for (let test of tests) {
     console.log(chalk.blue(`===== ${chalk.green(test.replace(cwd, '.'))} =====`))
-    let res = await run(contracts, test)
-    console.log(res.test.stdout)
+    try {
+      let res = run(contracts, test)
+      console.log(res.test.toString())
+    } catch(e) {
+      console.log('ERROR:', e.stdout.toString())
+    }
   }
 })()
