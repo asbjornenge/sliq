@@ -68,8 +68,8 @@ NB! The first time you run `sliq` it pulls the required docker image from docker
 ```
 option        default       wat
 --
---contracts   -             Location of contract(s). Can be a single contract or a folder. Can be passed multiple times.
---tests       - (required)  Location of test(s).  Can be a single contract or a folder. Can be passed multiple times.
+--contracts   -             Location of contract(s). Can be a single contract file or a folder. Can be passed multiple times.
+--tests       - (required)  Location of test(s).  Can be a single test file or a folder. Can be passed multiple times.
 --help        -             Display usage information.
 ```
 
