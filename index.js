@@ -74,7 +74,10 @@ async function getTests() {
       let res = run(contracts, test)
       console.log(res.test.toString())
     } catch(e) {
-      console.log('ERROR:', e.stdout.toString(), e.stderr.toString())
+      if (e.stdout)
+        console.log('ERROR:', e.stdout.toString(), e.stderr.toString())
+      else
+        console.log('SLIQ ERROR:', e)
     }
   }
 })()
