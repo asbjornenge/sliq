@@ -7,15 +7,26 @@ const args = require('minimist')(process.argv.slice(2), {
   default : {
     contracts : '',
     tests     : '',
-    watch     : false
+    watch     : false,
+    help      : false
   }
 })
 const image = 'asbjornenge/sliq:1.0.1'
+if (args.help || args.tests == '') {
+  console.log(`Sliq [OPTIONS]
+
+OPTIONS
+--contracts   - Location of contract(s)
+--tests       - Location of test(s)     (required)
+--help        - Display this message
+`)
+  process.exit(0)
+}
 
 ;
 
 function run(contracts, testfile) {
-  let contractPaths = args.contracts.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
+  let contractPaths = contracts.map(p => `-v ${p}:${p}`).join(' ')
   let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
 //  console.log(contractPaths, testPaths, contracts, testfile)
   let compile = `docker run --rm -v /tmp:/tmp ${contractPaths} ${testPaths} ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts.join(' ')} -o /tmp/sliq.techel ${testfile}`
