@@ -63,4 +63,14 @@ Done running test `Sliq`
 
 NB! The first time you run `sliq` it pulls the required docker image from docker hub. It's about 182MB, so it takes a little while.
 
+## Options 
+
+```
+option        default       wat
+--
+--contracts   -             Location of contract(s). Can be a single contract or a folder. Can be passed multiple times.
+--tests       - (required)  Location of test(s).  Can be a single contract or a folder. Can be passed multiple times.
+--help        -             Display usage information.
+```
+
 enjoy!
