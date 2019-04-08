@@ -64,24 +64,23 @@ async function getTests() {
   let cwd = process.cwd()
   let contracts = await getContracts()
   let tests = await getTests()
-  console.log(`${chalk.magenta('Sliq')}
-  ${chalk.cyan('Contracts')}
-    ${contracts.map(c => c.replace(cwd, '.')).join('\n    ')}
-  ${chalk.green('Tests')}
-    ${tests.map(c => c.replace(cwd, '.')).join('\n    ')}`)
-  console.log(chalk.magenta('Running tests...'))
-  for (let test of tests) {
-    console.log(chalk.blue(`===== ${chalk.green(test.replace(cwd, '.'))} =====`))
-    try {
-      let res = run(contracts, test)
-      console.log(res.test.toString())
-    } catch(e) {
-      if (e.stdout)
-        console.log('ERROR:', e.stdout.toString(), e.stderr.toString())
-      else
-        console.log('SLIQ ERROR:', e)
-    }
-  }
-})
-
-ui()
+  ui(contracts, tests, cwd)
+//  console.log(`${chalk.magenta('Sliq')}
+//  ${chalk.cyan('Contracts')}
+//    ${contracts.map(c => c.replace(cwd, '.')).join('\n    ')}
+//  ${chalk.green('Tests')}
+//    ${tests.map(c => c.replace(cwd, '.')).join('\n    ')}`)
+//  console.log(chalk.magenta('Running tests...'))
+//  for (let test of tests) {
+//    console.log(chalk.blue(`===== ${chalk.green(test.replace(cwd, '.'))} =====`))
+//    try {
+//      let res = run(contracts, test)
+//      console.log(res.test.toString())
+//    } catch(e) {
+//      if (e.stdout)
+//        console.log('ERROR:', e.stdout.toString(), e.stderr.toString())
+//      else
+//        console.log('SLIQ ERROR:', e)
+//    }
+//  }
+})()

@@ -23,6 +23,8 @@
     "chalk": "^2.4.2",
     "import-jsx": "^2.0.0",
     "ink": "^2.1.1",
+    "ink-box": "^1.0.0",
+    "ink-spinner": "^3.0.0",
     "minimist": "^1.2.0",
     "react": "^16.8.6",
     "walk-promise": "^0.2.0"
