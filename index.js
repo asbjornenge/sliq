@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const child_process = require('child_process')
+const importJsx = require('import-jsx')
 const chalk = require('chalk')
 const path = require('path')
 const walk = require('walk-promise')
@@ -11,6 +12,7 @@ const args = require('minimist')(process.argv.slice(2), {
     help      : false
   }
 })
+const ui = importJsx('./ui')
 const image = 'asbjornenge/sliq:1.0.1'
 if (args.help || args.tests == '') {
   console.log(`Sliq [OPTIONS]
@@ -80,4 +82,6 @@ async function getTests() {
         console.log('SLIQ ERROR:', e)
     }
   }
-})()
+})
+
+ui()
