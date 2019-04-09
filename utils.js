@@ -13,7 +13,6 @@ const image = 'asbjornenge/sliq:1.0.1'
 function run(args, contracts, testfile, callback) {
   let contractPaths = contracts.map(p => `-v ${p}:${p}`).join(' ')
   let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
-//  console.log(contractPaths, testPaths, contracts, testfile)
   let compile = `docker run --rm -v /tmp:/tmp ${contractPaths} ${testPaths} ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts.join(' ')} -o /tmp/sliq.techel ${testfile}`
   let test = `docker run --rm -v /tmp:/tmp ${image} techelson /tmp/sliq.techel`
   child_process.exec(compile, { stdio: 'pipe' }, (cerror, cstdout, cstderr) => {
@@ -21,7 +20,6 @@ function run(args, contracts, testfile, callback) {
     child_process.exec(test, { stdio: 'pipe' }, (terror, tstdout, tstderr) => {
       if (terror) return callback(terror, tstdout, tstderr)
       callback(null, { compile: cstdout, test: tstdout })
-//      return { compile: res_c, test: res_t }
     })
   })
 }
