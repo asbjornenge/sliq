@@ -5,21 +5,31 @@ const IBox = require('ink-box')
 const Spinner = require('ink-spinner').default
 
 const Sliq = (props) => {
+  let [_tests, setTests] = useState(props.tests)
   let contracts = props.contracts.map(c => {
     return (
       <Box key={c.rp+'contract'}>{c.rp}</Box>
     )
   })
-  let tests = props.tests.map(t => {
+  let tests = _tests.map(t => {
     return (
       <Box key={t.rp+'test'}>{t.rp}</Box>
     )
   })
-  let status = props.tests.map(t => {
+  let status = _tests.map(t => {
+    let status = <Text>{t.status}</Text>
+    if (t.status === 'running')
+      status = <Color green><Spinner type="dots" /><Text>Running</Text></Color>
     return (
-      <Box key={t.rp+'status'}>{t.status}</Box>
+      <Box key={t.rp+'status'}>{status}</Box>
     )
   })
+  setTimeout(() => {
+    setTests(_tests.map(t => {
+      t.status = 'running'
+      return t
+    }))
+  },1000)
   return (
     <Box flexDirection="column">
       <Box><Color magenta>Sliq</Color></Box>
