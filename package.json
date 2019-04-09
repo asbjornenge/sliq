@@ -27,6 +27,7 @@
     "ink-spinner": "^3.0.0",
     "minimist": "^1.2.0",
     "react": "^16.8.6",
+    "react-hookstore": "^1.2.1",
     "walk-promise": "^0.2.0"
   }
 }

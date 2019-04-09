@@ -13,7 +13,9 @@ const args = require('minimist')(process.argv.slice(2), {
   }
 })
 const ui = importJsx('./ui')
+const utils = require('./utils')
 const image = 'asbjornenge/sliq:1.0.1'
+const cwd = process.cwd()
 if (args.help || args.tests == '') {
   console.log(`Sliq [OPTIONS]
 
@@ -46,6 +48,12 @@ async function getContracts() {
   let contracts = await walk(paths)
     .then(c => c.map(_c => _c.root+'/'+_c.name))
     .then(c => c.filter(_c => _c.endsWith('liq')))
+    .then(c => c.map(_c => {
+      return {
+        fp: _c,
+        rp: _c.replace(cwd, '.'),
+      }
+    }))
   return contracts
 }
 
@@ -57,14 +65,22 @@ async function getTests() {
   let tests = await walk(paths)
     .then(c => c.map(_c => _c.root+'/'+_c.name))
     .then(c => c.filter(_c => _c.endsWith('liq')))
+    .then(c => c.map(_c => {
+      return {
+        fp: _c,
+        rp: _c.replace(cwd, '.'),
+        status: 'waiting'
+      }
+    }))
   return tests
 }
 
 (async () => {
-  let cwd = process.cwd()
   let contracts = await getContracts()
   let tests = await getTests()
-  ui(contracts, tests, cwd)
+  utils.testStore.setState(tests)
+  utils.contractStore.setState(contracts)
+  ui()
 //  console.log(`${chalk.magenta('Sliq')}
 //  ${chalk.cyan('Contracts')}
 //    ${contracts.map(c => c.replace(cwd, '.')).join('\n    ')}
