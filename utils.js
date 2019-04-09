@@ -10,15 +10,20 @@ module.exports.testStore = testStore
 module.exports.contractStore = contractStore
 
 const image = 'asbjornenge/sliq:1.0.1'
-function run(args, contracts, testfile) {
+function run(args, contracts, testfile, callback) {
   let contractPaths = contracts.map(p => `-v ${p}:${p}`).join(' ')
   let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
 //  console.log(contractPaths, testPaths, contracts, testfile)
   let compile = `docker run --rm -v /tmp:/tmp ${contractPaths} ${testPaths} ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts.join(' ')} -o /tmp/sliq.techel ${testfile}`
   let test = `docker run --rm -v /tmp:/tmp ${image} techelson /tmp/sliq.techel`
-  let res_c = child_process.execSync(compile, { stdio: 'pipe' })
-  let res_t = child_process.execSync(test, { stdio: 'pipe' })
-  return { compile: res_c, test: res_t }
+  child_process.exec(compile, { stdio: 'pipe' }, (cerror, cstdout, cstderr) => {
+    if (cerror) return callback(cerror, cstdout, cstderr)
+    child_process.exec(test, { stdio: 'pipe' }, (terror, tstdout, tstderr) => {
+      if (terror) return callback(terror, tstdout, tstderr)
+      callback(null, { compile: cstdout, test: tstdout })
+//      return { compile: res_c, test: res_t }
+    })
+  })
 }
 module.exports.run = run
 

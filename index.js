@@ -31,34 +31,51 @@ OPTIONS
   utils.contractStore.setState(contracts)
   ui()
 
-  setInterval(() => {
+  let updateTestState = (test, property, value) => {
     utils.testStore.setState(tests.map(t => {
-      switch(t.status) {
-        case 'waiting':
-          t.status = 'running'
-          return t
-        case 'running':
-          process.exit(0)
-      }
+      if (t.fp !== test.fp) return t
+      t[property] = value
       return t
     }))
-  },5000)
+  }
 
-//  for (let test of tests) {
-//    test.status = 'running'
-//    utils.testStore.setState(tests)
-//    try {
-//      let res = utils.run(args, contracts.map(c => c.fp), test.fp)
-////      console.log(res.test.toString())
-//      test.status = 'done'
-//    } catch(e) {
-//      if (e.stdout)
-//        console.log('ERROR:', e.stdout.toString(), e.stderr.toString())
-//      else
-//        console.log('SLIQ ERROR:', e)
-//      test.status = 'error'
-//      console.log('error')
-//    }
-//    utils.testStore.setState(tests)
-//  }
+  let printResults = () => {
+    setTimeout(() => {
+      tests.forEach(test => {
+        if (test.err) {
+          console.log(`${chalk.blue('====')} ${test.rp} ${chalk.blue('====')}`)
+          console.log(`${chalk.red('ERROR')}`)
+          let e = test.err
+          if (e.stdout)
+            console.log(e.stdout.toString(), e.stderr.toString())
+          else {
+            let msg = e.message
+            msg = msg.split('\n').filter(m => m.indexOf('Command failed') < 0).join('\n')
+            console.log(msg)
+          }
+        }
+        else if (args.v) {
+          console.log(`${chalk.blue('====')} ${test.rp} ${chalk.blue('====')}`)
+          console.log(test.res.test)
+        }
+      })
+    }, 2000)
+  }
+
+  let numTestsRun = 0
+  tests.forEach(test => {
+    updateTestState(test, 'status', 'running')
+    utils.run(args, contracts.map(c => c.fp), test.fp, (err, res) => {
+      if (err) {
+        updateTestState(test, 'status', 'error')
+      } else {
+        updateTestState(test, 'status', 'done')
+      }
+      test.err = err
+      test.res = res
+      numTestsRun++
+      if (numTestsRun === tests.length-1)
+        printResults()
+    })
+  })
 })()
