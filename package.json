@@ -26,8 +26,10 @@
     "ink-box": "^1.0.0",
     "ink-spinner": "^3.0.0",
     "minimist": "^1.2.0",
+    "node-emoji": "^1.10.0",
     "react": "^16.8.6",
     "react-hookstore": "^1.2.1",
+    "uid": "0.0.2",
     "walk-promise": "^0.2.0"
   }
 }

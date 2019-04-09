@@ -1,5 +1,6 @@
 const path = require('path')
 const walk = require('walk-promise')
+const uid = require('uid')
 const child_process = require('child_process')
 const { createStore } = require('react-hookstore')
 
@@ -13,8 +14,9 @@ const image = 'asbjornenge/sliq:1.0.1'
 function run(args, contracts, testfile, callback) {
   let contractPaths = contracts.map(p => `-v ${p}:${p}`).join(' ')
   let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
-  let compile = `docker run --rm -v /tmp:/tmp ${contractPaths} ${testPaths} ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts.join(' ')} -o /tmp/sliq.techel ${testfile}`
-  let test = `docker run --rm -v /tmp:/tmp ${image} techelson /tmp/sliq.techel`
+  let tid = uid(10)
+  let compile = `docker run --rm -v /tmp:/tmp ${contractPaths} ${testPaths} ${image} liquidity --no-annot --no-simplify --no-peephole /techel.liq ${contracts.join(' ')} -o /tmp/${tid}.techel ${testfile}`
+  let test = `docker run --rm -v /tmp:/tmp ${image} techelson /tmp/${tid}.techel`
   child_process.exec(compile, { stdio: 'pipe' }, (cerror, cstdout, cstderr) => {
     if (cerror) return callback(cerror, cstdout, cstderr)
     child_process.exec(test, { stdio: 'pipe' }, (terror, tstdout, tstderr) => {

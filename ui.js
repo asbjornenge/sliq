@@ -4,6 +4,7 @@ const { render, Color, Text, Box } = require('ink')
 const IBox = require('ink-box')
 const Spinner = require('ink-spinner').default
 const { useStore } = require('react-hookstore')
+const emoji = require('node-emoji')
 const utils = require('./utils')
 
 const Sliq = () => {
@@ -24,13 +25,17 @@ const Sliq = () => {
     let status = <Text>{t.status}</Text>
     if (t.status === 'running')
       status = <Color green><Spinner type="dots" /></Color>
+    if (t.status === 'done')
+      status = <Text>{emoji.get('white_check_mark')}</Text>
+    if (t.status === 'error')
+      status = <Text>{emoji.get('x')}</Text>
     return (
       <Box key={t.rp+'status'}>{status}</Box>
     )
   })
   return (
     <Box flexDirection="column">
-      <Box><Color magenta>Sliq</Color></Box>
+      <Box><Color magenta>Sliq</Color>{' '+emoji.get('robot_face')+emoji.get('rocket')}</Box>
       <Box flexDirection="row">
         <Box flexDirection="column" paddingRight={1} paddingTop={1}>
           <Color blue>Contracts</Color>
