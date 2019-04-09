@@ -6,7 +6,8 @@ const args = require('minimist')(process.argv.slice(2), {
     contracts : '',
     tests     : '',
     watch     : false,
-    help      : false
+    help      : false,
+    verbose   : false
   }
 })
 const ui = importJsx('./ui')
@@ -18,6 +19,7 @@ OPTIONS
 --contracts   - Location of contract(s)
 --tests       - Location of test(s)     (required)
 --help        - Display this message
+--verbose -v  - Verbose output
 `)
   process.exit(0)
 }
@@ -54,7 +56,7 @@ OPTIONS
             console.log(msg)
           }
         }
-        else if (args.v) {
+        else if (args.v || args.verbose) {
           console.log(`${chalk.blue('====')} ${test.rp} ${chalk.blue('====')}`)
           console.log(test.res.test)
         }
