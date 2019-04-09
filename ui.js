@@ -23,7 +23,7 @@ const Sliq = () => {
   let _status = tests.map(t => {
     let status = <Text>{t.status}</Text>
     if (t.status === 'running')
-      status = <Color green><Spinner type="dots" /><Text>Running</Text></Color>
+      status = <Color green><Spinner type="dots" /></Color>
     return (
       <Box key={t.rp+'status'}>{status}</Box>
     )
