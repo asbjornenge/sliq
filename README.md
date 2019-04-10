@@ -19,8 +19,7 @@ npm install -g sliq
 ```
 sliq --contracts contracts/Demo.reliq --tests tests/
 ```
-
-<a href="https://asciinema.org/a/Gr3N48gHXKd6c4aohLSmiotrZ" target="_blank"><img src="https://asciinema.org/a/Gr3N48gHXKd6c4aohLSmiotrZ.svg" /></a>
+<a href="https://asciinema.org/a/o5E9g5j1s0lEw3X7NEljqvNUx" target="_blank"><img src="https://asciinema.org/a/o5E9g5j1s0lEw3X7NEljqvNUx.svg" /></a>
 
 NB! The first time you run `sliq` it pulls the required docker image from docker hub. It's about 182MB, so it takes a little while.
 
