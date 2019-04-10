@@ -7,11 +7,16 @@ const args = require('minimist')(process.argv.slice(2), {
     tests     : '',
     watch     : false,
     help      : false,
-    verbose   : false
+    verbose   : false,
+    version   : false
   }
 })
 const ui = importJsx('./ui')
 const utils = require('./utils')
+if (args.version) {
+  console.log(require('./package.json').version)
+  process.exit(0)
+}
 if (args.help || args.tests == '') {
   console.log(`Sliq [OPTIONS]
 
@@ -20,6 +25,7 @@ OPTIONS
 --tests       - Location of test(s)     (required)
 --help        - Display this message
 --verbose -v  - Verbose output
+--version     - Sliq version
 `)
   process.exit(0)
 }
@@ -61,7 +67,7 @@ OPTIONS
           console.log(test.res.test)
         }
       })
-    }, 2000)
+    }, 1000)
   }
 
   let numTestsRun = 0
@@ -76,7 +82,7 @@ OPTIONS
       test.err = err
       test.res = res
       numTestsRun++
-      if (numTestsRun === tests.length-1)
+      if (numTestsRun === tests.length)
         printResults()
     })
   })
