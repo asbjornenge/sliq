@@ -54,8 +54,8 @@ OPTIONS
           console.log(`${chalk.blue('====')} ${test.rp} ${chalk.blue('====')}`)
           console.log(`${chalk.red('ERROR')}`)
           let e = test.err
-          if (e.stdout)
-            console.log(e.stdout.toString(), e.stderr.toString())
+          if (test.stdout != '')
+            console.log(test.stdout, test.stderr)
           else {
             let msg = e.message
             msg = msg.split('\n').filter(m => m.indexOf('Command failed') < 0).join('\n')
@@ -64,7 +64,7 @@ OPTIONS
         }
         else if (args.v || args.verbose) {
           console.log(`${chalk.blue('====')} ${test.rp} ${chalk.blue('====')}`)
-          console.log(test.res.test)
+          console.log(test.stdout)
         }
       })
     }, 1000)
@@ -73,14 +73,15 @@ OPTIONS
   let numTestsRun = 0
   tests.forEach(test => {
     updateTestState(test, 'status', 'running')
-    utils.run(args, contracts.map(c => c.fp), test.fp, (err, res) => {
+    utils.run(args, contracts.map(c => c.fp), test.fp, (err, stdout, stderr) => {
       if (err) {
         updateTestState(test, 'status', 'error')
       } else {
         updateTestState(test, 'status', 'done')
       }
       test.err = err
-      test.res = res
+      test.stdout = stdout
+      test.stderr = stderr
       numTestsRun++
       if (numTestsRun === tests.length)
         printResults()

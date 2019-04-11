@@ -21,7 +21,7 @@ function run(args, contracts, testfile, callback) {
     if (cerror) return callback(cerror, cstdout, cstderr)
     child_process.exec(test, { stdio: 'pipe' }, (terror, tstdout, tstderr) => {
       if (terror) return callback(terror, tstdout, tstderr)
-      callback(null, { compile: cstdout, test: tstdout })
+      callback(null, tstdout, tstderr)
     })
   })
 }
