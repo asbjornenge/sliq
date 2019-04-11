@@ -1,6 +1,6 @@
 {
   "name": "sliq",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Sliq is a techelson testrunner for liquidity programs.",
   "main": "index.js",
   "bin": {
