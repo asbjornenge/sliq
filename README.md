@@ -6,6 +6,8 @@ Sliq is a JavaScript cli application wrapping a [docker](https://www.docker.com/
 
 Another awesome thing is that `liquidity` supports [Reason](https://reasonml.github.io/) syntax, so now you can write both your contracts and your tests in Reason :sparkling_heart:
 
+Checkout [this](https://adrienchampion.github.io/blog/tezos/techelson/with_liquidity/index.html) blogpost for how to use `liquidity` with `techelson` :raised_hands:
+
 ## Install
 
 Make sure you have [node.js](https://nodejs.org/en/), [npm](https://www.npmjs.com/) and [docker](https://www.docker.com/) installed (and permissions to `docker run` without sudo).
