@@ -10,7 +10,7 @@ const contractStore = createStore('contractStore', [])
 module.exports.testStore = testStore
 module.exports.contractStore = contractStore
 
-const image = 'asbjornenge/sliq:1.1.0'
+const image = 'asbjornenge/sliq:1.1.1'
 function run(args, contracts, testfile, callback) {
   let contractPaths = contracts.map(p => `-v ${p}:${p}`).join(' ')
   let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
