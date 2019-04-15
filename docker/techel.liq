@@ -14,8 +14,8 @@ external end_set_source :
     unit -> unit
     = "}"
 external must_fail :
-    [%stack: operation] -> [%stack: operation]
-    = "{ NONE string ; MUST_FAIL string }"
+    [%stack: string option] -> [%stack: operation] -> [%stack: operation]
+    = "MUST_FAIL string"
 external print_stack :
     unit -> unit
     = "PRINT_STACK"
