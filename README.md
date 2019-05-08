@@ -31,10 +31,17 @@ NB! The first time you run `sliq` it pulls the required docker image from docker
 option        default       wat
 --
 --contracts   -             Location of contract(s). Can be a single contract file or a folder. Can be passed multiple times.
---tests       - (required)  Location of test(s).  Can be a single test file or a folder. Can be passed multiple times.
+--tests       -             Location of test(s).  Can be a single test file or a folder. Can be passed multiple times.
+--build       -             Location of contract to build.
 --help        -             Display usage information.
 --verbose -v  -             Verbose output
 --version     -             Sliq version
 ```
+
+## Changelog
+
+### 2.2.0
+
+* Added basic build support :package: :tada:
 
 enjoy!
