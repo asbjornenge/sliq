@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 const importJsx = require('import-jsx')
 const chalk = require('chalk')
+const emoji = require('node-emoji')
 const args = require('minimist')(process.argv.slice(2), {
   default : {
     contracts : '',
     tests     : '',
+    build     : '',
     watch     : false,
     help      : false,
     verbose   : false,
@@ -17,7 +19,7 @@ if (args.version) {
   console.log(require('./package.json').version)
   process.exit(0)
 }
-if (args.help || args.tests == '') {
+if (args.help) {
   console.log(`Sliq [OPTIONS]
 
 OPTIONS
@@ -32,7 +34,29 @@ OPTIONS
 
 ;
 
+let build = async () => {
+  args.contracts = args.build
+  let builds = await utils.getContracts(args)
+  utils.build(args, builds.map(c => c.fp), (err, res, stderr) => {
+    if (err) {
+      console.log(`${chalk.red('ERROR')}`)
+      if (err.stdout != '')
+        console.log(err.stdout, err.stderr)
+      else {
+        let msg = err.message
+        msg = msg.split('\n').filter(m => m.indexOf('Command failed') < 0).join('\n')
+        console.log(msg)
+      }
+    }
+    else if (args.v || args.verbose) {
+      console.log(res.stdout)
+    }
+    console.log(`Built ${res.outfile} ${emoji.get('tada')}`)
+  }) 
+}
+
 (async () => {
+  if (args.build != '') return await build()
   let contracts = await utils.getContracts(args)
   let tests = await utils.getTests(args)
   utils.testStore.setState(tests)

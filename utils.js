@@ -11,6 +11,22 @@ module.exports.testStore = testStore
 module.exports.contractStore = contractStore
 
 const image = 'asbjornenge/sliq:1.1.1'
+function build(args, contracts, callback) {
+  let contract = contracts[0]
+  let contractPaths = contract.split('/')
+  contractPaths.pop()
+  let contractFolder = contractPaths.join('/') 
+  let contractMount = `-v ${contractFolder}:${contractFolder}`
+  let mpos = contract.lastIndexOf('.')
+  let outfile = contract.substr(0, mpos < 0 ? contract.length : mpos) + '.tz'
+  let compile = `docker run --rm ${contractMount} ${image} liquidity ${contract} -o ${outfile}`
+  child_process.exec(compile, { stdio: 'pipe' }, (cerror, cstdout, cstderr) => {
+    if (cerror) return callback(cerror, cstdout, cstderr)
+    callback(null, { stdout: cstdout, outfile: outfile, infile: contract }, cstderr)
+  })
+}
+module.exports.build = build
+
 function run(args, contracts, testfile, callback) {
   let contractPaths = contracts.map(p => `-v ${p}:${p}`).join(' ')
   let testPaths = args.tests.map(cp => path.resolve(cp)).map(p => `-v ${p}:${p}`).join(' ')
@@ -29,6 +45,7 @@ module.exports.run = run
 
 async function getContracts(args) {
   if (args.contracts == '') return []
+  if (typeof args.contracts === 'boolean') return []
   if (typeof args.contracts === 'string')
     args.contracts = [args.contracts]
   let paths = args.contracts.map(cp => path.resolve(cp))
@@ -45,9 +62,9 @@ async function getContracts(args) {
 }
 module.exports.getContracts = getContracts
 
-
 async function getTests(args) {
   if (args.tests == '') return []
+  if (typeof args.tests === 'boolean') return []
   if (typeof args.tests === 'string')
     args.tests = [args.tests]
   let paths = args.tests.map(tp => path.resolve(tp))
